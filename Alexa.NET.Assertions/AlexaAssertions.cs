@@ -1,5 +1,6 @@
 ﻿using System;
 using Alexa.NET.Response;
+using Alexa.NET.Response.Ssml;
 
 namespace Alexa.NET.Assertions
 {
@@ -7,7 +8,7 @@ namespace Alexa.NET.Assertions
     {
         public static void AsksWith(SkillResponse response)
         {
-            GuardAgainstNull(nameof(response),response);
+            GuardAgainstNull(nameof(response), response);
             var shouldEnd = response?.Response?.ShouldEndSession;
             if (!shouldEnd.HasValue || shouldEnd.Value)
             {
@@ -17,7 +18,7 @@ namespace Alexa.NET.Assertions
 
         public static void TellsWith(SkillResponse response)
         {
-            GuardAgainstNull(nameof(response),response);
+            GuardAgainstNull(nameof(response), response);
             var shouldEnd = response?.Response?.ShouldEndSession;
             if (!shouldEnd.HasValue || !shouldEnd.Value)
             {
@@ -27,34 +28,74 @@ namespace Alexa.NET.Assertions
 
         public static void AsksWithPlainText(SkillResponse response, string expectedOutput)
         {
-            GuardAgainstNull(nameof(response),response);
+            GuardAgainstNull(nameof(response), response);
             AsksWith(response);
-            CheckPlainText(response,expectedOutput);
+            CheckText<PlainTextOutputSpeech>(response, expectedOutput);
         }
 
         public static void TellWithPlainText(SkillResponse response, string expectedOutput)
         {
             GuardAgainstNull(nameof(response), response);
             TellsWith(response);
-            CheckPlainText(response, expectedOutput);
+            CheckText<PlainTextOutputSpeech>(response, expectedOutput);
         }
 
-        private static void CheckPlainText(SkillResponse response, string expectedoutput)
+        public static void AsksWithSsml(SkillResponse response, Speech expectedOutput)
+        {
+            GuardAgainstNull(nameof(expectedOutput), expectedOutput);
+            AsksWithSsml(response,expectedOutput.ToXml());
+        }
+
+        public static void AsksWithSsml(SkillResponse response, string expectedOutput)
+        {
+            GuardAgainstNull(nameof(response), response);
+            AsksWith(response);
+            CheckText<SsmlOutputSpeech>(response, expectedOutput);
+        }
+
+        public static void TellWithSsml(SkillResponse response, Speech expectedOutput)
+        {
+            GuardAgainstNull(nameof(expectedOutput),expectedOutput);
+            TellWithSsml(response, expectedOutput.ToXml());
+        }
+
+        public static void TellWithSsml(SkillResponse response, string expectedOutput)
+        {
+            GuardAgainstNull(nameof(response), response);
+            TellsWith(response);
+            CheckText<SsmlOutputSpeech>(response, expectedOutput);
+        }
+
+
+        private static void CheckText<T>(SkillResponse response, string expectedoutput) where T : class, IOutputSpeech
         {
             if (response?.Response?.OutputSpeech == null)
             {
                 throw new OutputMismatchException("OutputSpeech not set");
             }
 
-            var speech = response?.Response?.OutputSpeech as PlainTextOutputSpeech;
-            if (speech == null)
+            var outputType = response.Response.OutputSpeech.GetType();
+            if (outputType != typeof(T))
             {
-                throw new OutputMismatchException("Output isn't plain text");
+                throw new OutputMismatchException($"Expected: \"{typeof(T).Name}\". Actual: \"{outputType.Name}\"");
             }
 
-            if (speech.Text != expectedoutput)
+            switch (response.Response.OutputSpeech)
             {
-                throw new OutputMismatchException($"Expected: \"{expectedoutput}\". Actual: \"{speech.Text}\"");
+                case PlainTextOutputSpeech plain:
+                    if (plain.Text != expectedoutput)
+                    {
+                        throw new OutputMismatchException($"Expected: \"{expectedoutput}\". Actual: \"{plain.Text}\"");
+                    }
+
+                    break;
+                case SsmlOutputSpeech ssml:
+                    if (ssml.Ssml != expectedoutput)
+                    {
+                        throw new OutputMismatchException($"Expected: \"{expectedoutput}\". Actual: \"{ssml.Ssml}\"");
+                    }
+
+                    break;
             }
         }
 

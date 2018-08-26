@@ -1,5 +1,7 @@
 using System;
 using Alexa.NET.Assertions;
+using Alexa.NET.Response;
+using Alexa.NET.Response.Ssml;
 using Xunit;
 
 namespace Alexa.NET.TestUtility.Tests
@@ -10,7 +12,7 @@ namespace Alexa.NET.TestUtility.Tests
         public void AskThrowsExceptionOnNull()
         {
             var exception = Assert.Throws<ArgumentNullException>(() => AlexaAssertions.AsksWith(null));
-            Assert.Equal("response",exception.ParamName);
+            Assert.Equal("response", exception.ParamName);
         }
 
         [Fact]
@@ -73,8 +75,8 @@ namespace Alexa.NET.TestUtility.Tests
         [Fact]
         public void AskWithPlainTextMatchingPhrase()
         {
-            var response = ResponseBuilder.Ask("test phrase",null);
-            AlexaAssertions.AsksWithPlainText(response,"test phrase");
+            var response = ResponseBuilder.Ask("test phrase", null);
+            AlexaAssertions.AsksWithPlainText(response, "test phrase");
         }
 
         [Fact]
@@ -97,6 +99,50 @@ namespace Alexa.NET.TestUtility.Tests
             var response = ResponseBuilder.Tell("test phrase", null);
             Assert.Throws<OutputMismatchException>(() =>
                 AlexaAssertions.TellWithPlainText(response, "not the test phrase"));
+        }
+
+        [Fact]
+        public void AskWithSsmlMatchingPhrase()
+        {
+            var response = ResponseBuilder.Ask(new Speech(new PlainText("test phrase")), null);
+            AlexaAssertions.AsksWithSsml(response, "<speak>test phrase</speak>");
+        }
+
+        [Fact]
+        public void AskWithSpeechMatchingPhrase()
+        {
+            var response = ResponseBuilder.Ask(new Speech(new PlainText("test phrase")), null);
+            AlexaAssertions.AsksWithSsml(response, new Speech(new PlainText("test phrase")));
+        }
+
+        [Fact]
+        public void AskWithSsmlMismatchPhrase()
+        {
+            var response = ResponseBuilder.Ask(new Speech(new PlainText("test phrase")), null);
+            var exception = Assert.Throws<OutputMismatchException>(() => AlexaAssertions.AsksWithSsml(response, "not the test phrase"));
+            Assert.Equal("Expected: \"not the test phrase\". Actual: \"<speak>test phrase</speak>\"", exception.Message);
+        }
+
+        [Fact]
+        public void TellWithSsmlMatchingPhrase()
+        {
+            var response = ResponseBuilder.Tell(new Speech(new PlainText("test phrase")), null);
+            AlexaAssertions.TellWithSsml(response, "<speak>test phrase</speak>");
+        }
+
+        [Fact]
+        public void TellWithSpeechMatchingPhrase()
+        {
+            var response = ResponseBuilder.Tell(new Speech(new PlainText("test phrase")), null);
+            AlexaAssertions.TellWithSsml(response, new Speech(new PlainText("test phrase")));
+        }
+
+        [Fact]
+        public void TellWithSsmlMismatchPhrase()
+        {
+            var response = ResponseBuilder.Tell(new Speech(new PlainText("test phrase")), null);
+            var exception = Assert.Throws<OutputMismatchException>(() => AlexaAssertions.TellWithSsml(response, "not the test phrase"));
+            Assert.Equal("Expected: \"not the test phrase\". Actual: \"<speak>test phrase</speak>\"", exception.Message);
         }
     }
 }
