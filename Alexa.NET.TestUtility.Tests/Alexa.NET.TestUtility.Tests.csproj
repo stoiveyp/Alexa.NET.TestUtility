@@ -13,7 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Alexa.NET.TestUtility\Alexa.NET.TestUtility.csproj" />
+    <ProjectReference Include="..\Alexa.NET.Assertions\Alexa.NET.Assertions.csproj" />
   </ItemGroup>
 
 </Project>
