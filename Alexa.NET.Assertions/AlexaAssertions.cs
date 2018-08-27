@@ -30,14 +30,14 @@ namespace Alexa.NET.Assertions
         {
             GuardAgainstNull(nameof(response), response);
             AsksWith(response);
-            CheckText<PlainTextOutputSpeech>(response, expectedOutput);
+            CheckOutput<PlainTextOutputSpeech>(response, expectedOutput);
         }
 
         public static void TellWithPlainText(SkillResponse response, string expectedOutput)
         {
             GuardAgainstNull(nameof(response), response);
             TellsWith(response);
-            CheckText<PlainTextOutputSpeech>(response, expectedOutput);
+            CheckOutput<PlainTextOutputSpeech>(response, expectedOutput);
         }
 
         public static void AsksWithSsml(SkillResponse response, Speech expectedOutput)
@@ -50,7 +50,7 @@ namespace Alexa.NET.Assertions
         {
             GuardAgainstNull(nameof(response), response);
             AsksWith(response);
-            CheckText<SsmlOutputSpeech>(response, expectedOutput);
+            CheckOutput<SsmlOutputSpeech>(response, expectedOutput);
         }
 
         public static void TellWithSsml(SkillResponse response, Speech expectedOutput)
@@ -63,11 +63,47 @@ namespace Alexa.NET.Assertions
         {
             GuardAgainstNull(nameof(response), response);
             TellsWith(response);
-            CheckText<SsmlOutputSpeech>(response, expectedOutput);
+            CheckOutput<SsmlOutputSpeech>(response, expectedOutput);
         }
 
+        public static ICard HasCard(SkillResponse response)
+        {
+            GuardAgainstNull(nameof(response),response);
+            if (response?.Response.Card == null)
+            {
+                throw new CardMissingException(AlexaAssertMessages.CardNotSet);
+            }
 
-        private static void CheckText<T>(SkillResponse response, string expectedoutput) where T : class, IOutputSpeech
+            return response.Response.Card;
+        }
+
+        public static SimpleCard HasSimpleCard(SkillResponse response)
+        {
+            GuardAgainstNull(nameof(response),response);
+            var sourceOfTruth = new SimpleCard();
+            var card = HasCard(response);
+            if (!(card is SimpleCard))
+            {
+                throw new CardMismatchException(AlexaAssertMessages.Mismatch(sourceOfTruth.Type, card.Type));
+            }
+
+            return (SimpleCard)card;
+        }
+
+        public static StandardCard HasStandardCard(SkillResponse response)
+        {
+            GuardAgainstNull(nameof(response), response);
+            var sourceOfTruth = new StandardCard();
+            var card = HasCard(response);
+            if (!(card is StandardCard))
+            {
+                throw new CardMismatchException(AlexaAssertMessages.Mismatch(sourceOfTruth.Type, card.Type));
+            }
+
+            return (StandardCard)card;
+        }
+
+        private static void CheckOutput<T>(SkillResponse response, string expectedoutput) where T : class, IOutputSpeech
         {
             if (response?.Response?.OutputSpeech == null)
             {
@@ -77,7 +113,7 @@ namespace Alexa.NET.Assertions
             var outputType = response.Response.OutputSpeech.GetType();
             if (outputType != typeof(T))
             {
-                throw new OutputMismatchException($"Expected: \"{typeof(T).Name}\". Actual: \"{outputType.Name}\"");
+                throw new OutputMismatchException(AlexaAssertMessages.Mismatch(typeof(T).Name,outputType.Name));
             }
 
             switch (response.Response.OutputSpeech)
@@ -85,14 +121,14 @@ namespace Alexa.NET.Assertions
                 case PlainTextOutputSpeech plain:
                     if (plain.Text != expectedoutput)
                     {
-                        throw new OutputMismatchException($"Expected: \"{expectedoutput}\". Actual: \"{plain.Text}\"");
+                        throw new OutputMismatchException(AlexaAssertMessages.Mismatch(expectedoutput,plain.Text));
                     }
 
                     break;
                 case SsmlOutputSpeech ssml:
                     if (ssml.Ssml != expectedoutput)
                     {
-                        throw new OutputMismatchException($"Expected: \"{expectedoutput}\". Actual: \"{ssml.Ssml}\"");
+                        throw new OutputMismatchException(AlexaAssertMessages.Mismatch(expectedoutput,ssml.Ssml));
                     }
 
                     break;
