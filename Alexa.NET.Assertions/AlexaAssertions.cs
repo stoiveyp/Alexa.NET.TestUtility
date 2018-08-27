@@ -77,7 +77,18 @@ namespace Alexa.NET.Assertions
             return response.Response.Card;
         }
 
+        public static SimpleCard HasSimpleCard(SkillResponse response)
+        {
+            GuardAgainstNull(nameof(response),response);
+            var sourceOfTruth = new SimpleCard();
+            var card = HasCard(response);
+            if (!(card is SimpleCard))
+            {
+                throw new CardMismatchException(AlexaAssertMessages.Mismatch(sourceOfTruth.Type, card.Type));
+            }
 
+            return (SimpleCard)card;
+        }
 
         private static void CheckOutput<T>(SkillResponse response, string expectedoutput) where T : class, IOutputSpeech
         {
