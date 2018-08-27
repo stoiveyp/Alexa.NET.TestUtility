@@ -52,5 +52,31 @@ namespace Alexa.NET.TestUtility.Tests
             response.Response.Card = new StandardCard();
             Assert.Throws<CardMismatchException>(() => AlexaAssertions.HasSimpleCard(response));
         }
+
+        [Fact]
+        public void HasStandardCardPositiveCheck()
+        {
+            var assertCard = new StandardCard { Content = "test" };
+            var response = ResponseBuilder.Empty();
+            response.Response.Card = assertCard;
+            var StandardCard = AlexaAssertions.HasStandardCard(response);
+            Assert.NotNull(StandardCard);
+            Assert.Equal(assertCard, StandardCard);
+        }
+
+        [Fact]
+        public void HasStandardCardNegativeCheck()
+        {
+            var response = ResponseBuilder.Empty();
+            Assert.Throws<CardMissingException>(() => AlexaAssertions.HasStandardCard(response));
+        }
+
+        [Fact]
+        public void HasStandardCardMismatchCheck()
+        {
+            var response = ResponseBuilder.Empty();
+            response.Response.Card = new SimpleCard();
+            Assert.Throws<CardMismatchException>(() => AlexaAssertions.HasStandardCard(response));
+        }
     }
 }

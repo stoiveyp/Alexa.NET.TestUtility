@@ -90,6 +90,19 @@ namespace Alexa.NET.Assertions
             return (SimpleCard)card;
         }
 
+        public static StandardCard HasStandardCard(SkillResponse response)
+        {
+            GuardAgainstNull(nameof(response), response);
+            var sourceOfTruth = new StandardCard();
+            var card = HasCard(response);
+            if (!(card is StandardCard))
+            {
+                throw new CardMismatchException(AlexaAssertMessages.Mismatch(sourceOfTruth.Type, card.Type));
+            }
+
+            return (StandardCard)card;
+        }
+
         private static void CheckOutput<T>(SkillResponse response, string expectedoutput) where T : class, IOutputSpeech
         {
             if (response?.Response?.OutputSpeech == null)
