@@ -6,7 +6,7 @@ namespace Alexa.NET.Assertions
 {
     public static class AlexaAssertions
     {
-        public static void AsksWith(SkillResponse response)
+        public static void Asks(SkillResponse response)
         {
             GuardAgainstNull(nameof(response), response);
             var shouldEnd = response?.Response?.ShouldEndSession;
@@ -16,7 +16,7 @@ namespace Alexa.NET.Assertions
             }
         }
 
-        public static void TellsWith(SkillResponse response)
+        public static void Tells(SkillResponse response)
         {
             GuardAgainstNull(nameof(response), response);
             var shouldEnd = response?.Response?.ShouldEndSession;
@@ -26,49 +26,49 @@ namespace Alexa.NET.Assertions
             }
         }
 
-        public static void AsksWithPlainText(SkillResponse response, string expectedOutput)
+        public static void AskPlainText(SkillResponse response, string expectedOutput)
         {
             GuardAgainstNull(nameof(response), response);
-            AsksWith(response);
-            CheckOutput<PlainTextOutputSpeech>(response, expectedOutput);
+            Asks(response);
+            CheckOutput<PlainTextOutputSpeech>(response,r => r?.Response.OutputSpeech,"OutputSpeech",expectedOutput);
         }
 
-        public static void TellWithPlainText(SkillResponse response, string expectedOutput)
+        public static void TellPlainText(SkillResponse response, string expectedOutput)
         {
             GuardAgainstNull(nameof(response), response);
-            TellsWith(response);
-            CheckOutput<PlainTextOutputSpeech>(response, expectedOutput);
+            Tells(response);
+            CheckOutput<PlainTextOutputSpeech>(response, r => r?.Response.OutputSpeech, "OutputSpeech",expectedOutput);
         }
 
-        public static void AsksWithSsml(SkillResponse response, Speech expectedOutput)
+        public static void AsksSsml(SkillResponse response, Speech expectedOutput)
         {
             GuardAgainstNull(nameof(expectedOutput), expectedOutput);
-            AsksWithSsml(response,expectedOutput.ToXml());
+            AsksSsml(response, expectedOutput.ToXml());
         }
 
-        public static void AsksWithSsml(SkillResponse response, string expectedOutput)
+        public static void AsksSsml(SkillResponse response, string expectedOutput)
         {
             GuardAgainstNull(nameof(response), response);
-            AsksWith(response);
-            CheckOutput<SsmlOutputSpeech>(response, expectedOutput);
+            Asks(response);
+            CheckOutput<SsmlOutputSpeech>(response, r => r?.Response.OutputSpeech, "OutputSpeech",expectedOutput);
         }
 
-        public static void TellWithSsml(SkillResponse response, Speech expectedOutput)
+        public static void TellSsml(SkillResponse response, Speech expectedOutput)
         {
-            GuardAgainstNull(nameof(expectedOutput),expectedOutput);
-            TellWithSsml(response, expectedOutput.ToXml());
+            GuardAgainstNull(nameof(expectedOutput), expectedOutput);
+            TellSsml(response, expectedOutput.ToXml());
         }
 
-        public static void TellWithSsml(SkillResponse response, string expectedOutput)
+        public static void TellSsml(SkillResponse response, string expectedOutput)
         {
             GuardAgainstNull(nameof(response), response);
-            TellsWith(response);
-            CheckOutput<SsmlOutputSpeech>(response, expectedOutput);
+            Tells(response);
+            CheckOutput<SsmlOutputSpeech>(response, r => r?.Response.OutputSpeech, "OutputSpeech",expectedOutput);
         }
 
-        public static ICard HasCard(SkillResponse response)
+        public static ICard Card(SkillResponse response)
         {
-            GuardAgainstNull(nameof(response),response);
+            GuardAgainstNull(nameof(response), response);
             if (response?.Response.Card == null)
             {
                 throw new CardMissingException(AlexaAssertMessages.CardNotSet);
@@ -77,46 +77,77 @@ namespace Alexa.NET.Assertions
             return response.Response.Card;
         }
 
-        public static SimpleCard HasSimpleCard(SkillResponse response)
+        public static SimpleCard SimpleCard(SkillResponse response)
         {
-            GuardAgainstNull(nameof(response),response);
+            GuardAgainstNull(nameof(response), response);
             var sourceOfTruth = new SimpleCard();
-            var card = HasCard(response);
+            var card = Card(response);
             if (!(card is SimpleCard))
             {
                 throw new CardMismatchException(AlexaAssertMessages.Mismatch(sourceOfTruth.Type, card.Type));
             }
 
-            return (SimpleCard)card;
+            return (SimpleCard) card;
         }
 
-        public static StandardCard HasStandardCard(SkillResponse response)
+        public static StandardCard StandardCard(SkillResponse response)
         {
             GuardAgainstNull(nameof(response), response);
             var sourceOfTruth = new StandardCard();
-            var card = HasCard(response);
+            var card = Card(response);
             if (!(card is StandardCard))
             {
                 throw new CardMismatchException(AlexaAssertMessages.Mismatch(sourceOfTruth.Type, card.Type));
             }
 
-            return (StandardCard)card;
+            return (StandardCard) card;
         }
 
-        private static void CheckOutput<T>(SkillResponse response, string expectedoutput) where T : class, IOutputSpeech
+        public static void Reprompt(SkillResponse response)
         {
-            if (response?.Response?.OutputSpeech == null)
+            GuardAgainstNull(nameof(response),response);
+            if (response?.Response.Reprompt == null)
             {
-                throw new OutputMismatchException("OutputSpeech not set");
+                throw new RepromptMissingException(AlexaAssertMessages.RepromptNotSet);
+            }
+        }
+
+        public static void RepromptPlainText(SkillResponse response,string expectedReprompt)
+        {
+            Reprompt(response);
+            CheckOutput<PlainTextOutputSpeech>(response,r => r?.Response.Reprompt.OutputSpeech,"Reprompt",expectedReprompt);
+        }
+
+        public static void RepromptSsml(SkillResponse response, Speech expectedReprompt)
+        {
+            RepromptSsml(response,expectedReprompt.ToXml());
+        }
+
+        public static void RepromptSsml(SkillResponse response, string expectedReprompt)
+        {
+            Reprompt(response);
+            CheckOutput<SsmlOutputSpeech>(response, r => r?.Response.Reprompt.OutputSpeech, "Reprompt", expectedReprompt);
+        }
+
+        private static void CheckOutput<T>(SkillResponse response, Func<SkillResponse,IOutputSpeech> parser, string property, string expectedOutput) where T : class, IOutputSpeech
+        {
+            var output = parser(response);
+            if (output == null)
+            {
+                throw new OutputMismatchException(property + " not set");
             }
 
-            var outputType = response.Response.OutputSpeech.GetType();
+            var outputType = output.GetType();
             if (outputType != typeof(T))
             {
-                throw new OutputMismatchException(AlexaAssertMessages.Mismatch(typeof(T).Name,outputType.Name));
+                throw new OutputMismatchException(AlexaAssertMessages.Mismatch(typeof(T).Name, outputType.Name));
             }
+            CheckText(output,expectedOutput);
+        }
 
-            switch (response.Response.OutputSpeech)
+        private static void CheckText(IOutputSpeech speech, string expectedoutput)
+        {
+            switch (speech)
             {
                 case PlainTextOutputSpeech plain:
                     if (plain.Text != expectedoutput)

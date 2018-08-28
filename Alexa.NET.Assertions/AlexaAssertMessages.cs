@@ -12,6 +12,7 @@ namespace Alexa.NET.Assertions
         public const string AskShouldEndSessionNotTrue = "To 'ask' Response.ShouldEndSesson needs to be set to false";
         public const string TellShouldEndSessionNotFalse = "To 'tell' Response.ShouldEndSession needs to be set to true";
         public const string CardNotSet = "No card set";
+        public const string RepromptNotSet = "No reprompt set";
 
         public static string Mismatch(string expected, string actual)
         {
