@@ -2,6 +2,12 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <Authors>Steven Pears</Authors>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Description>Small utility library to help write assertions for Alexa.NET skill responses</Description>
+    <RepositoryUrl>https://github.com/stoiveyp/Alexa.NET.TestUtility</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/stoiveyp/Alexa.NET.TestUtility</PackageProjectUrl>
+    <PackageReleaseNotes>Initial set of assertions</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
