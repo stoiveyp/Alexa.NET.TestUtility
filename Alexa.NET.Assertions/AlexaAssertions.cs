@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Alexa.NET.Response;
 using Alexa.NET.Response.Ssml;
 
@@ -127,6 +128,29 @@ namespace Alexa.NET.Assertions
         {
             Reprompt(response);
             CheckOutput<SsmlOutputSpeech>(response, r => r?.Response.Reprompt.OutputSpeech, "Reprompt", expectedReprompt);
+        }
+
+        public static T Directive<T>(SkillResponse response) where T : IDirective
+        {
+            return Directive<T>(response, t => true);
+        }
+
+        public static T Directive<T>(SkillResponse response, Func<T,bool> filter) where T:IDirective
+        {
+            GuardAgainstNull(nameof(response),response);
+            var directives = response?.Response?.Directives?.OfType<T>().Where(filter).ToArray() ?? new T[]{};
+
+            if (directives.Length  == 0)
+            {
+                throw new DirectiveMissingException(AlexaAssertMessages.NoDirective(typeof(T).Name));
+            }
+
+            if (directives.Length > 1)
+            {
+                throw new AmbiguousDirectiveException(AlexaAssertMessages.MultipleDirectives(typeof(T).Name));
+            }
+
+            return directives.First();
         }
 
         private static void CheckOutput<T>(SkillResponse response, Func<SkillResponse,IOutputSpeech> parser, string property, string expectedOutput) where T : class, IOutputSpeech

@@ -18,5 +18,15 @@ namespace Alexa.NET.Assertions
         {
             return "Expected: \"" + expected + "\". Actual: \"" + actual + "\"";
         }
+
+        public static string NoDirective(string directiveName)
+        {
+            return "No directives of type \""+ directiveName +"\"";
+        }
+
+        public static string MultipleDirectives(string directiveName)
+        {
+            return "Multiple directives of type \"" + directiveName + "\" found. Unsure of which to return";
+        }
     }
 }
