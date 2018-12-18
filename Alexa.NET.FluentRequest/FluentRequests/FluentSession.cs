@@ -25,6 +25,10 @@ namespace Alexa.NET.FluentRequests
                 {
                     UserId="testUser"+Request.NextRandom(),
                     AccessToken = "testAccessToken"+Request.NextRandom()
+                },
+                Application = new Application
+                {
+                    ApplicationId = "testApplication" + Request.NextRandom()
                 }
             };
         }

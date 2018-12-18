@@ -19,7 +19,7 @@ namespace Alexa.NET.TestUtility.Tests
             Assert.Equal("testSession1",session.SessionId);
             Assert.Equal("testUser2",session.User.UserId);
             Assert.Equal("testAccessToken3",session.User.AccessToken);
-
+            Assert.Equal("testApplication4",session.Application.ApplicationId);
             Assert.Equal("1.0", request.Version);
         }
     }
