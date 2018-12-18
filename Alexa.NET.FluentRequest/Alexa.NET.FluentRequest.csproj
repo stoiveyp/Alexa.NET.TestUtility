@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="Alexa.NET">
+      <HintPath>..\..\..\..\.nuget\packages\alexa.net\1.5.4\lib\netstandard1.6\Alexa.NET.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>

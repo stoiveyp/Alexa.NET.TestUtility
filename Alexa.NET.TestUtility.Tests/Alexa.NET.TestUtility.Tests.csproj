@@ -14,6 +14,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Alexa.NET.Assertions\Alexa.NET.Assertions.csproj" />
+    <ProjectReference Include="..\Alexa.NET.FluentRequest\Alexa.NET.FluentRequest.csproj" />
   </ItemGroup>
 
 </Project>
