@@ -15,17 +15,20 @@ namespace Alexa.NET
         }
 
         public FluentSession Session { get; }
+        public FluentContext Context { get; }
 
 
         public FluentRequest()
         {
            Session = new FluentSession(this);
+           Context = new FluentContext(this);
         }
 
         public SkillRequest Request =>  new SkillRequest
             {
                 Version = "1.0",
-                Session = Session.Session
+                Session = Session.Session,
+                Context = Context.Context
             };
     }
 }

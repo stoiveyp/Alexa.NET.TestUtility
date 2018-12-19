@@ -8,6 +8,9 @@
     <Reference Include="Alexa.NET">
       <HintPath>..\..\..\..\.nuget\packages\alexa.net\1.5.4\lib\netstandard1.6\Alexa.NET.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\..\..\..\.nuget\packages\newtonsoft.json\9.0.1\lib\netstandard1.0\Newtonsoft.Json.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>
