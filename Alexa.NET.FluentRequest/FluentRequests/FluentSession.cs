@@ -6,25 +6,25 @@ namespace Alexa.NET.FluentRequests
 {
     public class FluentSession
     {
-        private FluentRequest Request { get; }
+        private FluentSkillRequest SkillRequest { get; }
         internal Session Session { get; }
 
-        internal FluentSession(FluentRequest fluentRequest)
+        internal FluentSession(FluentSkillRequest fluentSkillRequest)
         {
-            Request = fluentRequest;
+            SkillRequest = fluentSkillRequest;
             Session = new Session
             {
                 New = true,
                 Attributes = new Dictionary<string, object>(),
-                SessionId = "testSession" + Request.NextRandom(),
+                SessionId = "testSession" + SkillRequest.NextRandom(),
                 User = new User
                 {
-                    UserId = "testUser" + Request.NextRandom(),
-                    AccessToken = "testAccessToken" + Request.NextRandom()
+                    UserId = "testUser" + SkillRequest.NextRandom(),
+                    AccessToken = "testAccessToken" + SkillRequest.NextRandom()
                 },
                 Application = new Application
                 {
-                    ApplicationId = "testApplication" + Request.NextRandom()
+                    ApplicationId = "testApplication" + SkillRequest.NextRandom()
                 }
             };
         }
@@ -75,6 +75,6 @@ namespace Alexa.NET.FluentRequests
             return this;
         }
 
-        public FluentRequest And => Request;
+        public FluentSkillRequest And => SkillRequest;
     }
 }

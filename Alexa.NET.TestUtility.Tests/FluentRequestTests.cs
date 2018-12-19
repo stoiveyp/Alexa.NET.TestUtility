@@ -10,7 +10,7 @@ namespace Alexa.NET.TestUtility.Tests
         [Fact]
         public void EmptyGeneratesSkillRequest()
         {
-            var request = new FluentRequest().Request;
+            var request = new FluentSkillRequest().SkillRequest;
             Assert.NotNull(request);
             Assert.NotNull(request.Session);
 

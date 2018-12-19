@@ -6,7 +6,7 @@ using Alexa.NET.FluentRequests;
 
 namespace Alexa.NET
 {
-    public class FluentRequest
+    public class FluentSkillRequest
     {
         private int nextRandom = 0;
         internal string NextRandom()
@@ -17,18 +17,21 @@ namespace Alexa.NET
         public FluentSession Session { get; }
         public FluentContext Context { get; }
 
+        public FluentRequest Request { get; set; }
 
-        public FluentRequest()
+
+        public FluentSkillRequest()
         {
            Session = new FluentSession(this);
            Context = new FluentContext(this);
         }
 
-        public SkillRequest Request =>  new SkillRequest
+        public SkillRequest SkillRequest =>  new SkillRequest
             {
                 Version = "1.0",
                 Session = Session.Session,
-                Context = Context.Context
+                Context = Context.Context,
+                Request = Request?.Request
             };
     }
 }

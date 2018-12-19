@@ -9,31 +9,31 @@ namespace Alexa.NET.FluentRequests
 {
     public class FluentContext
     {
-        private FluentRequest Request { get; }
+        private FluentSkillRequest SkillRequest { get; }
         internal Context Context { get; }
 
-        internal FluentContext(FluentRequest request)
+        internal FluentContext(FluentSkillRequest skillRequest)
         {
-            Request = request;
+            SkillRequest = skillRequest;
             Context = new Context
             {
                 AudioPlayer = null,
                 System = new AlexaSystem
                 {
-                    User = request.Session.Session.User,
+                    User = skillRequest.Session.Session.User,
                     ApiEndpoint = "https://api.amazonalexa.com",
-                    Application = request.Session.Session.Application,
-                    ApiAccessToken = "apiAccess" + request.NextRandom(),
+                    Application = skillRequest.Session.Session.Application,
+                    ApiAccessToken = "apiAccess" + skillRequest.NextRandom(),
                     Device = new Device
                     {
-                        DeviceID = "deviceId" + request.NextRandom(),
+                        DeviceID = "deviceId" + skillRequest.NextRandom(),
                         SupportedInterfaces = new Dictionary<string, object>()
                     }
                 }
             };
         }
 
-        public FluentRequest And => Request;
+        public FluentSkillRequest And => SkillRequest;
         public FluentContext WithPlaybackState(PlaybackState state)
         {
             Context.AudioPlayer = state;
