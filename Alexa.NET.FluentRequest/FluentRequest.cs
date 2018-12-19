@@ -22,15 +22,10 @@ namespace Alexa.NET
            Session = new FluentSession(this);
         }
 
-
-        public SkillRequest Build()
-        {
-            var request = new SkillRequest
+        public SkillRequest Request =>  new SkillRequest
             {
                 Version = "1.0",
-                Session = Session.Build()
+                Session = Session.Session
             };
-            return request;
-        }
     }
 }
