@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Alexa.NET.Request;
 using Alexa.NET.Request.Type;
 using Xunit;
 
@@ -54,5 +55,45 @@ namespace Alexa.NET.TestUtility.Tests
             var intent = Assert.IsType<IntentRequest>(request.SkillRequest.Request);
             Assert.Equal(BuiltInIntent.Help,intent.Intent.Name);
         }
+
+        [Fact]
+        public void IntentRequestSetsDialogStatus()
+        {
+            var request = new FluentSkillRequest().IntentRequest(BuiltInIntent.Help,DialogState.Completed).And;
+            var intent = Assert.IsType<IntentRequest>(request.SkillRequest.Request);
+            Assert.Equal(DialogState.Completed,intent.DialogState);
+
+        }
+
+        [Fact]
+        public void IntentRequestSetsConfirmationStatus()
+        {
+            var request = new FluentSkillRequest().IntentRequest(BuiltInIntent.Help).WithConfirmationStatus(ConfirmationStatus.Confirmed).And;
+            var intent = Assert.IsType<IntentRequest>(request.SkillRequest.Request);
+            Assert.Equal(ConfirmationStatus.Confirmed,intent.Intent.ConfirmationStatus);
+        }
+
+        [Fact]
+        public void AddSlotAddsKeyAndValue()
+        {
+            var request = new FluentSkillRequest().IntentRequest(BuiltInIntent.Help);
+            request.AddSlot("test", "value");
+            var intent = Assert.IsType<IntentRequest>(request.And.SkillRequest.Request);
+            Assert.Single(intent.Intent.Slots);
+            Assert.Equal("test",intent.Intent.Slots["test"].Name);
+            Assert.Equal("value",intent.Intent.Slots["test"].Value);
+        }
+
+        [Fact]
+        public void AddSlotAddsSlot()
+        {
+            var slot = new Slot {Name = "test"};
+            var request = new FluentSkillRequest().IntentRequest(BuiltInIntent.Help);
+            request.AddSlot(slot);
+            var intent = Assert.IsType<IntentRequest>(request.And.SkillRequest.Request);
+            Assert.Single(intent.Intent.Slots);
+            Assert.Equal(slot, intent.Intent.Slots["test"]);
+        }
+
     }
 }

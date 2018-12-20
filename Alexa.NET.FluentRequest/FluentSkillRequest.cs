@@ -46,6 +46,13 @@ namespace Alexa.NET
             return new FluentSessionEndedRequest(this);
         }
 
+        public FluentIntentRequest IntentRequest(string intentName, string dialogState)
+        {
+            var intent = IntentRequest(intentName);
+            intent.WithDialogState(dialogState);
+            return intent;
+        }
+
         public FluentIntentRequest IntentRequest(string intentName)
         {
             if (string.IsNullOrWhiteSpace(intentName))
