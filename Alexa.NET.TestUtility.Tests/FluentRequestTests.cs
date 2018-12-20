@@ -40,5 +40,19 @@ namespace Alexa.NET.TestUtility.Tests
             var request = new FluentSkillRequest().SessionEndedRequest().And;
             Assert.IsType<SessionEndedRequest>(request.SkillRequest.Request);
         }
+
+        [Fact]
+        public void IntentRequestRequiresName()
+        {
+            Assert.Throws<ArgumentNullException>(() => new FluentSkillRequest().IntentRequest(null));
+        }
+
+        [Fact]
+        public void IntentRequestSetsName()
+        {
+            var request = new FluentSkillRequest().IntentRequest(BuiltInIntent.Help).And;
+            var intent = Assert.IsType<IntentRequest>(request.SkillRequest.Request);
+            Assert.Equal(BuiltInIntent.Help,intent.Intent.Name);
+        }
     }
 }

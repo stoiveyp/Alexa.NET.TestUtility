@@ -45,5 +45,14 @@ namespace Alexa.NET
         {
             return new FluentSessionEndedRequest(this);
         }
+
+        public FluentIntentRequest IntentRequest(string intentName)
+        {
+            if (string.IsNullOrWhiteSpace(intentName))
+            {
+                throw new ArgumentNullException(nameof(intentName));
+            }
+            return new FluentIntentRequest(this,intentName);
+        }
     }
 }
