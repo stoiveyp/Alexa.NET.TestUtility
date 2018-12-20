@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <Authors>Steven Pears</Authors>
+    <Company />
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Description>A small library to help build SkillRequests used for testing Alexa Skills</Description>
+    <PackageProjectUrl>https://github.com/stoiveyp/Alexa.NET.TestUtility</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/stoiveyp/Alexa.NET.TestUtility</RepositoryUrl>
+    <PackageLicenseUrl>https://github.com/stoiveyp/Alexa.NET.TestUtility/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageTags>alexa,test</PackageTags>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="Alexa.NET">
+      <HintPath>..\..\..\..\.nuget\packages\alexa.net\1.5.4\lib\netstandard1.6\Alexa.NET.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\..\..\..\.nuget\packages\newtonsoft.json\9.0.1\lib\netstandard1.0\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>
