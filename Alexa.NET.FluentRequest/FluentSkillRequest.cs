@@ -17,8 +17,17 @@ namespace Alexa.NET
         public FluentSession Session { get; }
         public FluentContext Context { get; }
 
-        public FluentRequest Request { get; set; }
+        internal FluentRequest Request { get; set; }
+        internal string RequestLocale { get; set; }
+        internal DateTime? RequestTimestamp { get; set; }
+        internal string RequestId { get; set; }
 
+        public FluentLaunchRequest LaunchRequest()
+        {
+            var launch = new FluentLaunchRequest(this);
+            Request = launch;
+            return launch;
+        }
 
         public FluentSkillRequest()
         {
