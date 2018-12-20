@@ -5,6 +5,20 @@ using Alexa.NET.Request;
 
 namespace Alexa.NET.FluentRequests
 {
+    public abstract class FluentRequest<T>:FluentRequest where T : Request.Type.Request,new()
+    {
+        public override Request.Type.Request Request => new T
+        {
+            Locale = GetLocale(),
+            RequestId = GetRequestId(),
+            Timestamp = GetTimestamp()
+        };
+
+        protected FluentRequest(FluentSkillRequest skillRequest) : base(skillRequest)
+        {
+        }
+    }
+
     public abstract class FluentRequest
     {
         protected FluentSkillRequest SkillRequest { get; }
@@ -12,6 +26,7 @@ namespace Alexa.NET.FluentRequests
         protected FluentRequest(FluentSkillRequest skillRequest)
         {
             SkillRequest = skillRequest;
+            SkillRequest.Request = this;
         }
 
         public FluentSkillRequest And => SkillRequest;

@@ -33,5 +33,12 @@ namespace Alexa.NET.TestUtility.Tests
             Assert.Equal("requestId9",request.SkillRequest.Request.RequestId);
             Assert.True(request.SkillRequest.Request.Timestamp > DateTime.Now.AddMinutes(-1));
         }
+
+        [Fact]
+        public void SessionEndedRequest()
+        {
+            var request = new FluentSkillRequest().SessionEndedRequest().And;
+            Assert.IsType<SessionEndedRequest>(request.SkillRequest.Request);
+        }
     }
 }

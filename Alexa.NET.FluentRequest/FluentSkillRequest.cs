@@ -24,9 +24,7 @@ namespace Alexa.NET
 
         public FluentLaunchRequest LaunchRequest()
         {
-            var launch = new FluentLaunchRequest(this);
-            Request = launch;
-            return launch;
+            return new FluentLaunchRequest(this);
         }
 
         public FluentSkillRequest()
@@ -42,5 +40,10 @@ namespace Alexa.NET
                 Context = Context.Context,
                 Request = Request?.Request
             };
+
+        public FluentSessionEndedRequest SessionEndedRequest()
+        {
+            return new FluentSessionEndedRequest(this);
+        }
     }
 }
