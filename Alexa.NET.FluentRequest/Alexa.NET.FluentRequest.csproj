@@ -2,6 +2,14 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <Authors>Steven Pears</Authors>
+    <Company />
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Description>A small library to help build SkillRequests used for testing Alexa Skills</Description>
+    <PackageProjectUrl>https://github.com/stoiveyp/Alexa.NET.TestUtility</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/stoiveyp/Alexa.NET.TestUtility</RepositoryUrl>
+    <PackageLicenseUrl>https://github.com/stoiveyp/Alexa.NET.TestUtility/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageTags>alexa,test</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
