@@ -7,9 +7,8 @@
     <Description>Small utility library to help write assertions for Alexa.NET skill responses</Description>
     <RepositoryUrl>https://github.com/stoiveyp/Alexa.NET.TestUtility</RepositoryUrl>
     <PackageProjectUrl>https://github.com/stoiveyp/Alexa.NET.TestUtility</PackageProjectUrl>
-    <PackageReleaseNotes>Make ask and tell method names consistent
-Ask and tell now return the IOutputSpeech, if set</PackageReleaseNotes>
-    <Version>2.0.0</Version>
+    <PackageReleaseNotes>Reprompt now returns the reprompt after asserting it exists</PackageReleaseNotes>
+    <Version>2.1.0</Version>
   </PropertyGroup>
 
   <ItemGroup>
@@ -22,6 +21,12 @@ Ask and tell now return the IOutputSpeech, if set</PackageReleaseNotes>
 
   <ItemGroup>
     <PackageReference Include="Alexa.NET" Version="1.5.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Readme.md">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

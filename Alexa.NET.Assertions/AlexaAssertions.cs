@@ -112,30 +112,35 @@ namespace Alexa.NET.Assertions
             return (StandardCard) card;
         }
 
-        public static void Reprompt(SkillResponse response)
+        public static Reprompt Reprompt(SkillResponse response)
         {
             GuardAgainstNull(nameof(response),response);
             if (response?.Response.Reprompt == null)
             {
                 throw new RepromptMissingException(AlexaAssertMessages.RepromptNotSet);
             }
+
+            return response.Response.Reprompt;
         }
 
-        public static void RepromptPlainText(SkillResponse response,string expectedReprompt)
+        public static Reprompt RepromptPlainText(SkillResponse response,string expectedReprompt)
         {
             Reprompt(response);
             CheckOutput<PlainTextOutputSpeech>(response,r => r?.Response.Reprompt.OutputSpeech,"Reprompt",expectedReprompt);
+            return response.Response.Reprompt;
         }
 
-        public static void RepromptSsml(SkillResponse response, Speech expectedReprompt)
+        public static Reprompt RepromptSsml(SkillResponse response, Speech expectedReprompt)
         {
             RepromptSsml(response,expectedReprompt.ToXml());
+            return response.Response.Reprompt;
         }
 
-        public static void RepromptSsml(SkillResponse response, string expectedReprompt)
+        public static Reprompt RepromptSsml(SkillResponse response, string expectedReprompt)
         {
             Reprompt(response);
             CheckOutput<SsmlOutputSpeech>(response, r => r?.Response.Reprompt.OutputSpeech, "Reprompt", expectedReprompt);
+            return response.Response.Reprompt;
         }
 
         public static T Directive<T>(SkillResponse response) where T : IDirective
