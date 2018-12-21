@@ -11,7 +11,7 @@ namespace Alexa.NET.TestUtility.Tests
         {
             var response = ResponseBuilder.Tell("test");
 
-            AlexaAssertions.Asks(response);
+            AlexaAssertions.Ask(response);
 
         }
     }

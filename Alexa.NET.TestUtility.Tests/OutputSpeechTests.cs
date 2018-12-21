@@ -11,7 +11,7 @@ namespace Alexa.NET.TestUtility.Tests
         [Fact]
         public void AskThrowsExceptionOnNull()
         {
-            var exception = Assert.Throws<ArgumentNullException>(() => AlexaAssertions.Asks(null));
+            var exception = Assert.Throws<ArgumentNullException>(() => AlexaAssertions.Ask(null));
             Assert.Equal("response", exception.ParamName);
         }
 
@@ -19,7 +19,7 @@ namespace Alexa.NET.TestUtility.Tests
         public void AskNegativeShouldEndSession()
         {
             var response = ResponseBuilder.Ask("test", null);
-            AlexaAssertions.Asks(response);
+            AlexaAssertions.Ask(response);
         }
 
         [Fact]
@@ -27,7 +27,7 @@ namespace Alexa.NET.TestUtility.Tests
         {
             var response = ResponseBuilder.Empty();
             response.Response.ShouldEndSession = null;
-            var exception = Assert.Throws<ShouldEndSessionException>(() => AlexaAssertions.Asks(response));
+            var exception = Assert.Throws<ShouldEndSessionException>(() => AlexaAssertions.Ask(response));
             Assert.Equal(AlexaAssertMessages.AskShouldEndSessionNotTrue, exception.Message);
         }
 
@@ -36,14 +36,14 @@ namespace Alexa.NET.TestUtility.Tests
         {
             var response = ResponseBuilder.Empty();
             response.Response.ShouldEndSession = true;
-            var exception = Assert.Throws<ShouldEndSessionException>(() => AlexaAssertions.Asks(response));
+            var exception = Assert.Throws<ShouldEndSessionException>(() => AlexaAssertions.Ask(response));
             Assert.Equal(AlexaAssertMessages.AskShouldEndSessionNotTrue, exception.Message);
         }
 
         [Fact]
         public void TellsThrowsExceptionOnNull()
         {
-            var exception = Assert.Throws<ArgumentNullException>(() => AlexaAssertions.Tells(null));
+            var exception = Assert.Throws<ArgumentNullException>(() => AlexaAssertions.Tell(null));
             Assert.Equal("response", exception.ParamName);
         }
 
@@ -51,7 +51,7 @@ namespace Alexa.NET.TestUtility.Tests
         public void TellPositiveShouldEndSession()
         {
             var response = ResponseBuilder.Tell("test");
-            AlexaAssertions.Tells(response);
+            AlexaAssertions.Tell(response);
         }
 
         [Fact]
@@ -59,7 +59,7 @@ namespace Alexa.NET.TestUtility.Tests
         {
             var response = ResponseBuilder.Empty();
             response.Response.ShouldEndSession = false;
-            var exception = Assert.Throws<ShouldEndSessionException>(() => AlexaAssertions.Tells(response));
+            var exception = Assert.Throws<ShouldEndSessionException>(() => AlexaAssertions.Tell(response));
             Assert.Equal(AlexaAssertMessages.TellShouldEndSessionNotFalse, exception.Message);
         }
 
@@ -68,7 +68,7 @@ namespace Alexa.NET.TestUtility.Tests
         {
             var response = ResponseBuilder.Empty();
             response.Response.ShouldEndSession = false;
-            var exception = Assert.Throws<ShouldEndSessionException>(() => AlexaAssertions.Tells(response));
+            var exception = Assert.Throws<ShouldEndSessionException>(() => AlexaAssertions.Tell(response));
             Assert.Equal(AlexaAssertMessages.TellShouldEndSessionNotFalse, exception.Message);
         }
 
@@ -105,21 +105,21 @@ namespace Alexa.NET.TestUtility.Tests
         public void AskWithSsmlMatchingPhrase()
         {
             var response = ResponseBuilder.Ask(new Speech(new PlainText("test phrase")), null);
-            AlexaAssertions.AsksSsml(response, "<speak>test phrase</speak>");
+            AlexaAssertions.AskSsml(response, "<speak>test phrase</speak>");
         }
 
         [Fact]
         public void AskWithSpeechMatchingPhrase()
         {
             var response = ResponseBuilder.Ask(new Speech(new PlainText("test phrase")), null);
-            AlexaAssertions.AsksSsml(response, new Speech(new PlainText("test phrase")));
+            AlexaAssertions.AskSsml(response, new Speech(new PlainText("test phrase")));
         }
 
         [Fact]
         public void AskWithSsmlMismatchPhrase()
         {
             var response = ResponseBuilder.Ask(new Speech(new PlainText("test phrase")), null);
-            var exception = Assert.Throws<OutputMismatchException>(() => AlexaAssertions.AsksSsml(response, "not the test phrase"));
+            var exception = Assert.Throws<OutputMismatchException>(() => AlexaAssertions.AskSsml(response, "not the test phrase"));
             Assert.Equal("Expected: \"not the test phrase\". Actual: \"<speak>test phrase</speak>\"", exception.Message);
         }
 

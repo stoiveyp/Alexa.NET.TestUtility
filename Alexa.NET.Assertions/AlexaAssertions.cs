@@ -7,7 +7,7 @@ namespace Alexa.NET.Assertions
 {
     public static class AlexaAssertions
     {
-        public static void Asks(SkillResponse response)
+        public static IOutputSpeech Ask(SkillResponse response)
         {
             GuardAgainstNull(nameof(response), response);
             var shouldEnd = response?.Response?.ShouldEndSession;
@@ -15,9 +15,11 @@ namespace Alexa.NET.Assertions
             {
                 throw new ShouldEndSessionException(AlexaAssertMessages.AskShouldEndSessionNotTrue);
             }
+
+            return response.Response.OutputSpeech;
         }
 
-        public static void Tells(SkillResponse response)
+        public static IOutputSpeech Tell(SkillResponse response)
         {
             GuardAgainstNull(nameof(response), response);
             var shouldEnd = response?.Response?.ShouldEndSession;
@@ -25,33 +27,38 @@ namespace Alexa.NET.Assertions
             {
                 throw new ShouldEndSessionException(AlexaAssertMessages.TellShouldEndSessionNotFalse);
             }
+            return response.Response.OutputSpeech;
         }
 
-        public static void AskPlainText(SkillResponse response, string expectedOutput)
+        public static IOutputSpeech AskPlainText(SkillResponse response, string expectedOutput)
         {
             GuardAgainstNull(nameof(response), response);
-            Asks(response);
+            Ask(response);
             CheckOutput<PlainTextOutputSpeech>(response,r => r?.Response.OutputSpeech,"OutputSpeech",expectedOutput);
+            return response.Response.OutputSpeech;
         }
 
-        public static void TellPlainText(SkillResponse response, string expectedOutput)
+        public static IOutputSpeech TellPlainText(SkillResponse response, string expectedOutput)
         {
             GuardAgainstNull(nameof(response), response);
-            Tells(response);
+            Tell(response);
             CheckOutput<PlainTextOutputSpeech>(response, r => r?.Response.OutputSpeech, "OutputSpeech",expectedOutput);
+            return response.Response.OutputSpeech;
         }
 
-        public static void AsksSsml(SkillResponse response, Speech expectedOutput)
+        public static IOutputSpeech AskSsml(SkillResponse response, Speech expectedOutput)
         {
             GuardAgainstNull(nameof(expectedOutput), expectedOutput);
-            AsksSsml(response, expectedOutput.ToXml());
+            AskSsml(response, expectedOutput.ToXml());
+            return response.Response.OutputSpeech;
         }
 
-        public static void AsksSsml(SkillResponse response, string expectedOutput)
+        public static IOutputSpeech AskSsml(SkillResponse response, string expectedOutput)
         {
             GuardAgainstNull(nameof(response), response);
-            Asks(response);
+            Ask(response);
             CheckOutput<SsmlOutputSpeech>(response, r => r?.Response.OutputSpeech, "OutputSpeech",expectedOutput);
+            return response.Response.OutputSpeech;
         }
 
         public static void TellSsml(SkillResponse response, Speech expectedOutput)
@@ -60,11 +67,12 @@ namespace Alexa.NET.Assertions
             TellSsml(response, expectedOutput.ToXml());
         }
 
-        public static void TellSsml(SkillResponse response, string expectedOutput)
+        public static IOutputSpeech TellSsml(SkillResponse response, string expectedOutput)
         {
             GuardAgainstNull(nameof(response), response);
-            Tells(response);
+            Tell(response);
             CheckOutput<SsmlOutputSpeech>(response, r => r?.Response.OutputSpeech, "OutputSpeech",expectedOutput);
+            return response.Response.OutputSpeech;
         }
 
         public static ICard Card(SkillResponse response)
