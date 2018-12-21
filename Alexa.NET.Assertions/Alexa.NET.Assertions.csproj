@@ -12,15 +12,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Readme.md" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Include="Readme.md" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Alexa.NET" Version="1.5.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Readme.md">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>
