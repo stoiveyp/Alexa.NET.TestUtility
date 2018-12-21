@@ -13,6 +13,14 @@ Ask and tell now return the IOutputSpeech, if set</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Readme.md" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="Readme.md" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Alexa.NET" Version="1.5.4" />
   </ItemGroup>
 
