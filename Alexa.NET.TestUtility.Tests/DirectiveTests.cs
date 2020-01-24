@@ -27,12 +27,22 @@ namespace Alexa.NET.TestUtility.Tests
         }
 
         [Fact]
-        public void MultipleDirectivesOfTheSameKindThrows()
+        public void MultipleDirectivesOfTheSameKindReturnsFirst()
+        {
+            var response = ResponseBuilder.Empty();
+            var hint1 = new HintDirective();
+            response.Response.Directives.Add(hint1);
+            response.Response.Directives.Add(new HintDirective());
+            Assert.Equal(hint1,response.HasDirective<HintDirective>());
+        }
+
+        [Fact]
+        public void MultipleDirectiveWithPredicateFailsOnAmbigous()
         {
             var response = ResponseBuilder.Empty();
             response.Response.Directives.Add(new HintDirective());
             response.Response.Directives.Add(new HintDirective());
-            Assert.Throws<AmbiguousDirectiveException>(() => response.HasDirective<HintDirective>());
+            Assert.Throws<AmbiguousDirectiveException>(() => response.HasDirective<HintDirective>(h => true));
         }
 
         [Fact]
