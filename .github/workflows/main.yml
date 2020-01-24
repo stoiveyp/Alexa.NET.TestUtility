@@ -21,7 +21,7 @@ jobs:
       - name: GH Deploy Workaround
         run: |
            export REPO_NAME=$(echo ${GITHUB_REPOSITORY} | sed 's/stoiveyp\///')
-           for f in ./${REPO_NAME}/bin/Release/Alexa.NET.Assertions*.nupkg
+           for f in ./Alexa.NET.Assertions/bin/Release/Alexa.NET.Assertions*.nupkg
            do
              curl -vX PUT -u "stoiveyp:${{ secrets.GITHUB_TOKEN }}" -F package=@$f https://nuget.pkg.github.com/stoiveyp/
            done
@@ -29,9 +29,9 @@ jobs:
       - name: GH Deploy
         run: |
           export REPO_NAME=$(echo ${GITHUB_REPOSITORY} | sed 's/stoiveyp\///')
-          dotnet nuget push ./${REPO_NAME}/bin/Release/Alexa.NET.Assertions*.nupkg --source "https://nuget.pkg.github.com/stoiveyp/index.json" --api-key stoiveyp:${{ secrets.GITHUB_TOKEN }}
+          dotnet nuget push ./Alexa.NET.Assertions/bin/Release/Alexa.NET.Assertions*.nupkg --source "https://nuget.pkg.github.com/stoiveyp/index.json" --api-key stoiveyp:${{ secrets.GITHUB_TOKEN }}
         continue-on-error: true
       - name: Deploy to NuGet
         run: |
           export REPO_NAME=$(echo ${GITHUB_REPOSITORY} | sed 's/stoiveyp\///')
-          dotnet nuget push ./${REPO_NAME}/bin/Release/Alexa.NET.Assertions*.nupkg -k ${{ secrets.NUGET_KEY }} -s https://api.nuget.org/v3/index.json
+          dotnet nuget push ./Alexa.NET.Assertions/bin/Release/Alexa.NET.Assertions*.nupkg -k ${{ secrets.NUGET_KEY }} -s https://api.nuget.org/v3/index.json
