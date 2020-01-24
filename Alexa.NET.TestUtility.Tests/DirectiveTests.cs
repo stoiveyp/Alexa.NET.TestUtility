@@ -13,7 +13,7 @@ namespace Alexa.NET.TestUtility.Tests
         public void DirectiveWithNullDirectiveThrows()
         {
             var response = ResponseBuilder.Empty();
-            Assert.Throws<DirectiveMissingException>(() => AlexaAssertions.Directive<HintDirective>(response));
+            Assert.Throws<DirectiveMissingException>(() => response.HasDirective<HintDirective>());
         }
 
         [Fact]
@@ -22,7 +22,7 @@ namespace Alexa.NET.TestUtility.Tests
             var directive = new HintDirective();
             var response = ResponseBuilder.Empty();
             response.Response.Directives.Add(directive);
-            var output = AlexaAssertions.Directive<HintDirective>(response);
+            var output = response.HasDirective<HintDirective>();
             Assert.Equal(directive, output);
         }
 
@@ -32,7 +32,7 @@ namespace Alexa.NET.TestUtility.Tests
             var response = ResponseBuilder.Empty();
             response.Response.Directives.Add(new HintDirective());
             response.Response.Directives.Add(new HintDirective());
-            Assert.Throws<AmbiguousDirectiveException>(() => AlexaAssertions.Directive<HintDirective>(response));
+            Assert.Throws<AmbiguousDirectiveException>(() => response.HasDirective<HintDirective>());
         }
 
         [Fact]
@@ -43,7 +43,7 @@ namespace Alexa.NET.TestUtility.Tests
             response.Response.Directives.Add(new HintDirective());
             response.Response.Directives.Add(expectedHint);
 
-            var result = AlexaAssertions.Directive<HintDirective>(response, h => h.Hint?.Text == "test");
+            var result = response.HasDirective<HintDirective>(h => h.Hint?.Text == "test");
             Assert.Equal(expectedHint, result);
         }
     }

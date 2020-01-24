@@ -1,26 +1,31 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard1.6</TargetFramework>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <Authors>Steven Pears</Authors>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Description>Small utility library to help write assertions for Alexa.NET skill responses</Description>
     <RepositoryUrl>https://github.com/stoiveyp/Alexa.NET.TestUtility</RepositoryUrl>
     <PackageProjectUrl>https://github.com/stoiveyp/Alexa.NET.TestUtility</PackageProjectUrl>
-    <PackageReleaseNotes>Reprompt now returns the reprompt after asserting it exists</PackageReleaseNotes>
-    <Version>2.1.0</Version>
+    <PackageReleaseNotes>Methods are all now extension methods</PackageReleaseNotes>
+    <Version>3.0.0</Version>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
   </PropertyGroup>
 
   <ItemGroup>
     <None Remove="Readme.md" />
+    <None Include="..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="Readme.md" />
+    <Content Include="Readme.md" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Alexa.NET" Version="1.5.4" />
+    <PackageReference Include="Alexa.NET" Version="1.12.0" />
   </ItemGroup>
 
   <ItemGroup>

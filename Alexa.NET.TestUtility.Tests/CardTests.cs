@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Alexa.NET.Assertions;
+﻿using Alexa.NET.Assertions;
 using Alexa.NET.Response;
 using Xunit;
 
@@ -15,7 +12,7 @@ namespace Alexa.NET.TestUtility.Tests
             var assertCard = new SimpleCard();
             var response = ResponseBuilder.Empty();
             response.Response.Card = assertCard;
-            var card = AlexaAssertions.Card(response);
+            var card = response.HasCard();
             Assert.NotNull(card);
             Assert.Equal(assertCard, card);
         }
@@ -24,7 +21,7 @@ namespace Alexa.NET.TestUtility.Tests
         public void HasCardNegativeCheck()
         {
             var response = ResponseBuilder.Empty();
-            Assert.Throws<CardMissingException>(() => AlexaAssertions.Card(response));
+            Assert.Throws<CardMissingException>(() => response.HasCard());
         }
 
         [Fact]
@@ -33,16 +30,14 @@ namespace Alexa.NET.TestUtility.Tests
             var assertCard = new SimpleCard { Content = "test" };
             var response = ResponseBuilder.Empty();
             response.Response.Card = assertCard;
-            var simpleCard = AlexaAssertions.SimpleCard(response);
-            Assert.NotNull(simpleCard);
-            Assert.Equal(assertCard,simpleCard);
+            var simpleCard = response.HasCard<SimpleCard>();
         }
 
         [Fact]
         public void HasSimpleCardNegativeCheck()
         {
             var response = ResponseBuilder.Empty();
-            Assert.Throws<CardMissingException>(() => AlexaAssertions.SimpleCard(response));
+            Assert.Throws<CardMissingException>(() => response.HasCard<SimpleCard>());
         }
 
         [Fact]
@@ -50,7 +45,7 @@ namespace Alexa.NET.TestUtility.Tests
         {
             var response = ResponseBuilder.Empty();
             response.Response.Card = new StandardCard();
-            Assert.Throws<CardMismatchException>(() => AlexaAssertions.SimpleCard(response));
+            Assert.Throws<CardMismatchException>(() => response.HasCard<SimpleCard>());
         }
 
         [Fact]
@@ -59,7 +54,7 @@ namespace Alexa.NET.TestUtility.Tests
             var assertCard = new StandardCard { Content = "test" };
             var response = ResponseBuilder.Empty();
             response.Response.Card = assertCard;
-            var StandardCard = AlexaAssertions.StandardCard(response);
+            var StandardCard = response.HasCard<StandardCard>();
             Assert.NotNull(StandardCard);
             Assert.Equal(assertCard, StandardCard);
         }
@@ -68,7 +63,7 @@ namespace Alexa.NET.TestUtility.Tests
         public void HasStandardCardNegativeCheck()
         {
             var response = ResponseBuilder.Empty();
-            Assert.Throws<CardMissingException>(() => AlexaAssertions.StandardCard(response));
+            Assert.Throws<CardMissingException>(() => response.HasCard<StandardCard>());
         }
 
         [Fact]
@@ -76,7 +71,7 @@ namespace Alexa.NET.TestUtility.Tests
         {
             var response = ResponseBuilder.Empty();
             response.Response.Card = new SimpleCard();
-            Assert.Throws<CardMismatchException>(() => AlexaAssertions.StandardCard(response));
+            Assert.Throws<CardMismatchException>(() => response.HasCard<StandardCard>());
         }
     }
 }

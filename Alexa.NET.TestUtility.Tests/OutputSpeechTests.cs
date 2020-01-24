@@ -11,7 +11,7 @@ namespace Alexa.NET.TestUtility.Tests
         [Fact]
         public void AskThrowsExceptionOnNull()
         {
-            var exception = Assert.Throws<ArgumentNullException>(() => AlexaAssertions.Ask(null));
+            var exception = Assert.Throws<ArgumentNullException>(() => AlexaAssertions.Asks(null));
             Assert.Equal("response", exception.ParamName);
         }
 
@@ -19,7 +19,7 @@ namespace Alexa.NET.TestUtility.Tests
         public void AskNegativeShouldEndSession()
         {
             var response = ResponseBuilder.Ask("test", null);
-            AlexaAssertions.Ask(response);
+            response.Asks();
         }
 
         [Fact]
@@ -27,7 +27,7 @@ namespace Alexa.NET.TestUtility.Tests
         {
             var response = ResponseBuilder.Empty();
             response.Response.ShouldEndSession = null;
-            var exception = Assert.Throws<ShouldEndSessionException>(() => AlexaAssertions.Ask(response));
+            var exception = Assert.Throws<ShouldEndSessionException>(() => response.Asks());
             Assert.Equal(AlexaAssertMessages.AskShouldEndSessionNotTrue, exception.Message);
         }
 
@@ -36,14 +36,14 @@ namespace Alexa.NET.TestUtility.Tests
         {
             var response = ResponseBuilder.Empty();
             response.Response.ShouldEndSession = true;
-            var exception = Assert.Throws<ShouldEndSessionException>(() => AlexaAssertions.Ask(response));
+            var exception = Assert.Throws<ShouldEndSessionException>(() => response.Asks());
             Assert.Equal(AlexaAssertMessages.AskShouldEndSessionNotTrue, exception.Message);
         }
 
         [Fact]
         public void TellsThrowsExceptionOnNull()
         {
-            var exception = Assert.Throws<ArgumentNullException>(() => AlexaAssertions.Tell(null));
+            var exception = Assert.Throws<ArgumentNullException>(() => AlexaAssertions.Tells(null));
             Assert.Equal("response", exception.ParamName);
         }
 
@@ -51,7 +51,7 @@ namespace Alexa.NET.TestUtility.Tests
         public void TellPositiveShouldEndSession()
         {
             var response = ResponseBuilder.Tell("test");
-            AlexaAssertions.Tell(response);
+            response.Tells();
         }
 
         [Fact]
@@ -59,7 +59,7 @@ namespace Alexa.NET.TestUtility.Tests
         {
             var response = ResponseBuilder.Empty();
             response.Response.ShouldEndSession = false;
-            var exception = Assert.Throws<ShouldEndSessionException>(() => AlexaAssertions.Tell(response));
+            var exception = Assert.Throws<ShouldEndSessionException>(() => response.Tells());
             Assert.Equal(AlexaAssertMessages.TellShouldEndSessionNotFalse, exception.Message);
         }
 
@@ -68,7 +68,7 @@ namespace Alexa.NET.TestUtility.Tests
         {
             var response = ResponseBuilder.Empty();
             response.Response.ShouldEndSession = false;
-            var exception = Assert.Throws<ShouldEndSessionException>(() => AlexaAssertions.Tell(response));
+            var exception = Assert.Throws<ShouldEndSessionException>(() => response.Tells());
             Assert.Equal(AlexaAssertMessages.TellShouldEndSessionNotFalse, exception.Message);
         }
 
@@ -76,21 +76,21 @@ namespace Alexa.NET.TestUtility.Tests
         public void AskWithPlainTextMatchingPhrase()
         {
             var response = ResponseBuilder.Ask("test phrase", null);
-            AlexaAssertions.AskPlainText(response, "test phrase");
+            response.Asks<PlainTextOutputSpeech>(s => s.Text == "test phrase");
         }
 
         [Fact]
         public void AskWithPlainTextMismatchPhrase()
         {
             var response = ResponseBuilder.Ask("test phrase", null);
-            Assert.Throws<OutputMismatchException>(() => AlexaAssertions.AskPlainText(response, "not the test phrase"));
+            Assert.Throws<PredicateFailedException>(() => response.Asks<PlainTextOutputSpeech>(s => s.Text == "not the test phrase"));
         }
 
         [Fact]
         public void TellWithPlainTextMatchingPhrase()
         {
             var response = ResponseBuilder.Tell("test phrase", null);
-            AlexaAssertions.TellPlainText(response, "test phrase");
+            response.Tells<PlainTextOutputSpeech>(s => s.Text == "test phrase");
         }
 
         [Fact]
@@ -98,58 +98,56 @@ namespace Alexa.NET.TestUtility.Tests
         {
             var response = ResponseBuilder.Tell("test phrase", null);
             Assert.Throws<OutputMismatchException>(() =>
-                AlexaAssertions.TellPlainText(response, "not the test phrase"));
+                response.Tells<SsmlOutputSpeech>());
         }
 
         [Fact]
         public void AskWithSsmlMatchingPhrase()
         {
             var response = ResponseBuilder.Ask(new Speech(new PlainText("test phrase")), null);
-            AlexaAssertions.AskSsml(response, "<speak>test phrase</speak>");
+            response.Asks<SsmlOutputSpeech>(s => s.Ssml == "<speak>test phrase</speak>");
         }
 
         [Fact]
         public void AskWithSpeechMatchingPhrase()
         {
             var response = ResponseBuilder.Ask(new Speech(new PlainText("test phrase")), null);
-            AlexaAssertions.AskSsml(response, new Speech(new PlainText("test phrase")));
+            response.Asks<SsmlOutputSpeech>(s => s.Ssml == new Speech(new PlainText("test phrase")).ToXml());
         }
 
         [Fact]
         public void AskWithSsmlMismatchPhrase()
         {
             var response = ResponseBuilder.Ask(new Speech(new PlainText("test phrase")), null);
-            var exception = Assert.Throws<OutputMismatchException>(() => AlexaAssertions.AskSsml(response, "not the test phrase"));
-            Assert.Equal("Expected: \"not the test phrase\". Actual: \"<speak>test phrase</speak>\"", exception.Message);
+            Assert.Throws<PredicateFailedException>(() => response.Asks<SsmlOutputSpeech>(s => s.Ssml ==  "not the test phrase"));
         }
 
         [Fact]
         public void TellWithSsmlMatchingPhrase()
         {
             var response = ResponseBuilder.Tell(new Speech(new PlainText("test phrase")), null);
-            AlexaAssertions.TellSsml(response, "<speak>test phrase</speak>");
+            response.Tells<SsmlOutputSpeech>(s => s.Ssml == "<speak>test phrase</speak>");
         }
 
         [Fact]
         public void TellWithSpeechMatchingPhrase()
         {
             var response = ResponseBuilder.Tell(new Speech(new PlainText("test phrase")), null);
-            AlexaAssertions.TellSsml(response, new Speech(new PlainText("test phrase")));
+            response.Tells<SsmlOutputSpeech>(s => s.Ssml == new Speech(new PlainText("test phrase")).ToXml());
         }
 
         [Fact]
         public void TellWithSsmlMismatchPhrase()
         {
             var response = ResponseBuilder.Tell(new Speech(new PlainText("test phrase")), null);
-            var exception = Assert.Throws<OutputMismatchException>(() => AlexaAssertions.TellSsml(response, "not the test phrase"));
-            Assert.Equal("Expected: \"not the test phrase\". Actual: \"<speak>test phrase</speak>\"", exception.Message);
+            Assert.Throws<PredicateFailedException>(() => response.Tells<SsmlOutputSpeech>(s => s.Ssml == "not the test phrase"));
         }
 
         [Fact]
         public void HasRepromptNullCheck()
         {
             var response = ResponseBuilder.Empty();
-            Assert.Throws<RepromptMissingException>(() => AlexaAssertions.Reprompt(response));
+            Assert.Throws<RepromptMissingException>(() => response.HasReprompt());
         }
 
         [Fact]
@@ -157,14 +155,14 @@ namespace Alexa.NET.TestUtility.Tests
         {
             var testphrase = "test reprompt";
             var response = ResponseBuilder.Ask("test", new Reprompt(testphrase));
-            AlexaAssertions.RepromptPlainText(response,testphrase);
+            response.HasReprompt<PlainTextOutputSpeech>(p => p.Text.Contains(testphrase));
         }
 
         [Fact]
         public void AskRepromptPlainTextNegativeCheck()
         {
             var response = ResponseBuilder.Ask("test", new Reprompt("invalid phrase"));
-            Assert.Throws<OutputMismatchException>(() => AlexaAssertions.RepromptPlainText(response,"test reprompt"));
+            Assert.Throws<PredicateFailedException>(() => response.HasReprompt<PlainTextOutputSpeech>(pt => pt.Text == "test reprompt"));
         }
     }
 }

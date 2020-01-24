@@ -1,7 +1,7 @@
 ﻿# Alexa.NET.Assertions
 
 Utility library to make tests easier to write for your Alexa skills
-These examples also use [Alexa.Net.FluentRequest](https://nuget.org/packages/Alexa.NET.FluentRequest)
+` using Alexa.NET.Assertions `
 
 ## Making sure you're asking, not telling
 
@@ -9,35 +9,71 @@ These examples also use [Alexa.Net.FluentRequest](https://nuget.org/packages/Ale
         [Fact]
         public async Task LaunchAlwaysAsksIfTheyreReady()
         {
-            var fluent = new Alexa.NET.FluentSkillRequest().LaunchRequest().And;
-            var handler = new Launch();
-            var response = await handler.Handle(new AlexaRequestInformation(fluent.SkillRequest, null));
-            AlexaAssertions.Ask(response);
+            SkillResponse response = ...
+            response.Asks();
         }
 ```
 
-## Checking the exact output
+## Checking the exact output type
 ```csharp
         [Fact]
         public async Task LaunchReturnsSsml()
         {
-            var fluent = new Alexa.NET.FluentSkillRequest().LaunchRequest().And;
-            var handler = new Launch();
-            var response = await handler.Handle(new AlexaRequestInformation(fluent.SkillRequest, null));
-            AlexaAssertions.AskPlainText(response,"are you ready for this?");
+            SkillResponse response = ...
+            response.Tells<SsmlOutputSpeech>();
         }
 ```
 
-## Checking you're sending a standard card
+## Checking the speech is correct
+```csharp
+        [Fact]
+        public async Task LaunchReturnsSsml()
+        {
+            SkillResponse response = ...
+            response.Tells<PlainTextOutputSpeech>(output => output.Text.Contains("hi there"));
+        }
+```
+
+## Checking you're sending a standard card with the right text
 
 ```csharp
         [Fact]
         public async Task IntentReturnsCard()
         {
-            var fluent = new Alexa.NET.FluentSkillRequest().IntentRequest("SendCard").And;
-            var handler = new CardIntent();
-            var response = await handler.Handle(new AlexaRequestInformation(fluent.SkillRequest, null));
-            var card = AlexaAssertions.StandardCard()
-            Assert.Equal("card title", card.Title);
+            SkillResponse response = ...
+            response.HasCard<StandardCard>(card => card.Title == "card title");
+        }
+```
+
+## Response has a reprompt
+
+```csharp
+        [Fact]
+        public async Task IntentWithReprompt()
+        {
+            SkillResponse response = ...
+            response.HasReprompt<PlainTextOutputSpeech>(pt => pt.Text.Contains("hello?"));
+        }
+```
+
+## Response has a directive
+
+```csharp
+        [Fact]
+        public async Task IntentWithDirectives()
+        {
+            SkillResponse response = ...
+            response.HasDirective<HintDirective>();
+        }
+```
+
+## Response has a specific directive
+
+```csharp
+[Fact]
+        public async Task IntentWithDirectives()
+        {
+            SkillResponse response = ...
+            var directive = response.HasDirective<HintDirective>(h => h.Hint?.Text == "test");
         }
 ```
